@@ -36,6 +36,46 @@ controls.minDistance = 0.7;
 const group = new THREE.Group();
 scene.add(group);
 
+// 创建流星系统
+const meteors = [];
+const meteorGeometry = new THREE.SphereGeometry(0.002, 8, 8);
+const meteorMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+
+class Meteor {
+  constructor() {
+    this.mesh = new THREE.Mesh(meteorGeometry, meteorMaterial.clone());
+    this.reset();
+    scene.add(this.mesh);
+  }
+  
+  reset() {
+    this.mesh.position.set(
+      (Math.random() - 0.5) * 4,
+      2 + Math.random() * 2,
+      (Math.random() - 0.5) * 4
+    );
+    this.velocity = new THREE.Vector3(
+      (Math.random() - 0.5) * 0.02,
+      -0.01 - Math.random() * 0.02,
+      (Math.random() - 0.5) * 0.02
+    );
+    this.mesh.material.opacity = Math.random() * 0.8 + 0.2;
+    this.mesh.material.transparent = true;
+  }
+  
+  update() {
+    this.mesh.position.add(this.velocity);
+    if (this.mesh.position.y < -2) {
+      this.reset();
+    }
+  }
+}
+
+// 创建流星
+for (let i = 0; i < 50; i++) {
+  meteors.push(new Meteor());
+}
+
 let heart = null;
 let sampler = null;
 let originHeart = null;
@@ -139,6 +179,12 @@ const maxZ = 0.23;
 const rateZ = 0.5;
 
 function render(a) {
+  // 更新流星
+  meteors.forEach(meteor => meteor.update());
+  
+  // 添加旋转效果
+  group.rotation.y += 0.005;
+  
   positions = [];
   colors = [];
   spikes.forEach((g, i) => {
