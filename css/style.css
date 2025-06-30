@@ -6,7 +6,7 @@ body {
 
 #birthday-text {
   position: fixed;
-  top: 70%;
+  top: 85%;
   left: 50%;
   transform: translate(-50%, -50%);
   color: #ff77fc;
